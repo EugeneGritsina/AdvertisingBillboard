@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvertisingBillboard.Web", "AdvertisingBillboard.Web\AdvertisingBillboard.Web.csproj", "{310DA3A5-EC04-404F-A19F-9A64CEF7DED8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvertisingBillboard.Domain", "AdvertisingBillboard.Domain\AdvertisingBillboard.Domain.csproj", "{EF655667-6C83-4D3E-B65A-B2EF44B09D43}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvertisingBillboard.Data.Memory", "AdvertisingBillboard.Data.Memory\AdvertisingBillboard.Data.Memory.csproj", "{F472C000-4EA4-42F4-88AE-BEE465C0A7B6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{310DA3A5-EC04-404F-A19F-9A64CEF7DED8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{310DA3A5-EC04-404F-A19F-9A64CEF7DED8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{310DA3A5-EC04-404F-A19F-9A64CEF7DED8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{310DA3A5-EC04-404F-A19F-9A64CEF7DED8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF655667-6C83-4D3E-B65A-B2EF44B09D43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF655667-6C83-4D3E-B65A-B2EF44B09D43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF655667-6C83-4D3E-B65A-B2EF44B09D43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF655667-6C83-4D3E-B65A-B2EF44B09D43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F472C000-4EA4-42F4-88AE-BEE465C0A7B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F472C000-4EA4-42F4-88AE-BEE465C0A7B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F472C000-4EA4-42F4-88AE-BEE465C0A7B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F472C000-4EA4-42F4-88AE-BEE465C0A7B6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
