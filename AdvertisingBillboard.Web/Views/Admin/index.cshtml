@@ -1,0 +1,19 @@
+@model AdvertisingBillboard.Web.Models.StatusBar
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin page</title>
+</head>
+<body>
+<div>
+    <p>Number of users: @Model.NumberOfUsers</p>
+    <p>Number of devices: @Model.NumberOfDevices</p>
+    <p>Number of videos: @Model.NumberOfVideos</p>
+    
+    
+    <a href="@Url.Action("Index", "Users")">Manage users</a>
+</div>
+</body>
+</html>
