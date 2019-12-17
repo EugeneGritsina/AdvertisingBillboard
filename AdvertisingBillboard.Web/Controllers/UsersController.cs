@@ -12,7 +12,7 @@ namespace AdvertisingBillboard.Web.Controllers
             _usersRepository = usersRepository;
         }
 
-        public IActionResult Index()
+        public IActionResult Index()        // наверное, эту реализацию с возвращением списка юзеров можно удалить
         {
             var users = _usersRepository.Get();
             return View(users);

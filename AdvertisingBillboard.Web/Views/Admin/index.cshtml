@@ -1,19 +1,202 @@
-@model AdvertisingBillboard.Web.Models.StatusBar
+﻿@model AdvertisingBillboard.Web.Models.StatusBar
+@{
+    Layout = "~/Views/Shared/DefaultLayout.cshtml";
+}
 
-
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Admin page</title>
-</head>
-<body>
-<div>
-    <p>Number of users: @Model.NumberOfUsers</p>
-    <p>Number of devices: @Model.NumberOfDevices</p>
-    <p>Number of videos: @Model.NumberOfVideos</p>
-    
-    
-    <a href="@Url.Action("Index", "Users")">Manage users</a>
+<div class="row">
+    <span class="col-2"></span>
+    <span class="col-3">Number of users: @Model.NumberOfUsers</span>
+    <span class="col-3">Number of devices: @Model.NumberOfDevices</span>
+    <span class="col-2">Number of videos: @Model.NumberOfVideos</span>
+    <span class="col-2"></span>
 </div>
-</body>
-</html>
+<br>
+
+<ul class="nav nav-tabs">
+    <li class="col-2"></li>
+    <li class="active col-3">
+        <a data-toggle="tab" href="#manageUsers">Manage users</a>
+    </li>
+    <li class="active col-3">
+        <a data-toggle="tab" href="#manageDevices">Manage Devices</a>
+    </li>
+    <li class="active col-2">
+        <a data-toggle="tab" href="#videos">Videos</a>
+    </li>
+    <li class="col-2"></li>
+</ul>
+
+<div class="tab-content">
+    <div id="manageUsers" class="tab-pane fade ">
+        <br>
+        <div class="container">
+            <button type="button" class="btn btn-success btn-md" data-toggle="modal" data-target="#add_user">Add user</button> <br> <br>
+            <table class="table">
+                <tr>
+                    <th>User's name</th>
+                    <th></th>
+                </tr>
+                <tr>
+                    <td>Any name</td>
+                    <td><button class="btn btn-danger">Remove user</button></td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Modal -->
+        <div id="add_user" class="modal fade in active" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Add user</h3>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post">
+                            <!-- need to add method which produces this information-->
+                            <input placeholder="Name" name="name" />
+                            <input type="submit" value="Submit" />
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MANAGE DEVICES PART -->
+    <div id="manageDevices" class="tab-pane fade">
+        <br>
+        <div class="container">
+            <button class="btn btn-success">Add new device</button>
+            <button class="btn btn-success">Create new group</button>
+            <button class="btn btn-success">Upload a timetable</button>
+            <button class="btn btn-warning">Export the timetable</button>
+            <br> <br>
+            <table class="table">
+                <tr>
+                    <th>Device name</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                <tr class="device_group_row">
+                    <td>Any name</td>
+                    <td><button class="btn btn-danger">Remove group</button></td>
+                    <td>
+                        <button type="button" class="btn btn-success btn-md" data-toggle="modal" data-target="#access_group">Get access</button>
+                    </td>
+                    <td><button class="btn btn-info">Check statistics</button> <br> <br></td>
+                </tr>
+                <tr class="device_row">
+                    <td>Any name</td>
+                    <td><button class="btn btn-danger">Remove device</button></td>
+                    <td>
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#access_device">Get access</button>
+                    </td>
+                    <td><button class="btn btn-info">Check statistics</button> <br> <br></td>
+                </tr>
+            </table>
+        </div>
+        <br>
+    </div>
+
+    <!-- VIDEOS PART-->
+    <div id="videos" class="tab-pane fade">
+        <br>
+        <div class="container">
+            <button class="btn btn-success">Upload video</button> <br> <br>
+            <table class="table">
+                <tr>
+                    <th>Video</th>
+                    <th>Amount of clicks</th>
+                    <th>Amount of views</th>
+                    <th>Working time</th>
+                    <th></th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>3</td>
+                    <td>4</td>
+                    <td><button class="btn btn-danger btn-xs">Delete video</button></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+<!-- Modal -->
+<div id="access_device" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Device Name</h3>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Device status: <span>default</span></p>
+                <input type="button" class="btn btn-warning" value="Configure Memory"></input> <br> <br>
+                <div class="dropdown">
+                    <button class="btn btn-info dropdown-toggle" data-toggle="dropdown">Add device to the group <span class="caret"></span></button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">1st group</a></li>
+                        <li><a href="#">2nd group</a></li>
+                    </ul> <br> <br>
+                    <input type="button" class="btn btn-warning" value="Choose Video"></input> <br> <br>
+                    <input type="button" class="btn btn-warning" value="Edit the timetable"></input>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+    </div>
+
+
+<!-- Modal -->
+<div id="access_group" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Group Name</h3>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Group status: <span>default</span></p>
+                <div class="dropdown">
+                    <button class="btn btn-info dropdown-toggle" data-toggle="dropdown">Add device to the group <span class="caret"></span></button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">1st device</a></li>
+                        <li><a href="#">2nd device</a></li>
+                    </ul> <br> <br>
+                    <input type="button" class="btn btn-warning" value="Choose Video"></input> <br> <br>
+                    <input type="button" class="btn btn-warning" value="Edit the timetable"></input> <br> <br>
+                    <table class="table">
+                        <tr>
+                            <th>Device name</th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <th>Default_Name</th>
+                            <th>
+                                <input type="button" class="btn btn-danger" value="Delete device"></input>
+                            </th>
+                        </tr>
+                    </table>
+                    <input type="button" class="btn btn-danger" value="Delete group"></input>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

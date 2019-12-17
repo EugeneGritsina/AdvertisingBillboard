@@ -7,14 +7,25 @@ namespace AdvertisingBillboard.Web.Controllers
 {
     public class AdminController : Controller
     {
-        private readonly IUsersRepository _usersRepository;
 
+        private readonly IUsersRepository _usersRepository;
         public AdminController(IUsersRepository usersRepository)
         {
             _usersRepository = usersRepository;
         }
 
-        public IActionResult Index()
+        [HttpPost]
+        public ActionResult AddUser(string name)
+        {
+            _usersRepository.Create(new User
+            {
+                Id = Guid.NewGuid(),
+                Name = name
+            }); ;
+            return View("Index");
+        }
+
+        public ActionResult Index()
         {
             _usersRepository.Create(new User
             {
@@ -33,11 +44,11 @@ namespace AdvertisingBillboard.Web.Controllers
             var statusBar = new StatusBar
             {
                 NumberOfDevices = 1,
-                NumberOfUsers = 2,
+                NumberOfUsers = users.Length,
                 NumberOfVideos = 3
             };
-
             return View(statusBar);
         }
+
     }
 }
