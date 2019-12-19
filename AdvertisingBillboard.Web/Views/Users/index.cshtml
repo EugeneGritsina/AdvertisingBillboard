@@ -5,12 +5,16 @@
 }
     <div class="container">
         <br />
-        <input type="button" class="btn btn-primary" value="Export timetable" />
+        <div class="row">
+            <input type="button" class="btn btn-primary col-2" value="Export timetable" />
+            <span class="col-6"></span>
+            <h5 class="col-4">Welcome, @ViewBag.userName</h5>
+        </div> <br />
 
         <ul class="nav nav-tabs">
             <li class="col-2"></li>
             <li class="active col-3">
-                <a data-toggle="tab" href="#deviceList">Device List users</a>
+                <a data-toggle="tab" href="#deviceList">Device List</a>
             </li>
             <li class="active col-3">
                 <a data-toggle="tab" href="#adv_timetable">Check Advertising Timetable</a>

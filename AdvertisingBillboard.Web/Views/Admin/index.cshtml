@@ -1,13 +1,14 @@
-﻿@model AdvertisingBillboard.Web.Models.StatusBar
+﻿@using AdvertisingBillboard.Domain
+@model AdvertisingBillboard.Web.Models.ManageDevicesViewModel
 @{
     Layout = "~/Views/Shared/DefaultLayout.cshtml";
 }
 
 <div class="row">
     <span class="col-2"></span>
-    <span class="col-3">Number of users: @Model.NumberOfUsers</span>
-    <span class="col-3">Number of devices: @Model.NumberOfDevices</span>
-    <span class="col-2">Number of videos: @Model.NumberOfVideos</span>
+    <span class="col-3">Number of users: @ViewBag.NumberOfUsers</span>
+    <span class="col-3">Number of devices: @ViewBag.NumberOfDevices</span>
+    <span class="col-2">Number of videos: @ViewBag.NumberOfVideos</span>
     <span class="col-2"></span>
 </div>
 <br>
@@ -33,12 +34,23 @@
             <button type="button" class="btn btn-success btn-md" data-toggle="modal" data-target="#add_user">Add user</button> <br> <br>
             <table class="table">
                 <tr>
+                    <th>ID</th>
                     <th>User's name</th>
                     <th></th>
                 </tr>
                 <tr>
-                    <td>Any name</td>
-                    <td><button class="btn btn-danger">Remove user</button></td>
+                     @{
+                         foreach (User user in Model.users.Get())
+                         {
+                             <tr>
+                                 <td>@user.Id</td>
+                                 <td>@user.Name</td>
+                                 <td>
+                                     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete_user" onclick="@{ViewBag.userToDelete = user.Id;}">Delete user</button>
+                                 </td>
+                             </tr>
+                                         }
+                     }
                 </tr>
             </table>
         </div>
@@ -53,10 +65,28 @@
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body">
-                        <form method="post">
-                            <!-- need to add method which produces this information-->
-                            <input placeholder="Name" name="name" />
-                            <input type="submit" value="Submit" />
+                        <form method="post" action="~/Admin/AddUser">
+                            <input placeholder="Name" name="name" required/> <br /> <br />
+                            <input type="submit" class="btn btn-success" value="Submit" />
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div id="delete_user" class="modal fade in active" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Delete user</h3>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to delete user?</p>
+                        <form method="post" action="~/Admin/DeleteUser">
+                            <input type="submit" class="btn btn-danger" value="Submit" />
                         </form>
                     </div>
                 </div>
@@ -65,38 +95,63 @@
     </div>
 
     <!-- MANAGE DEVICES PART -->
+
     <div id="manageDevices" class="tab-pane fade">
         <br>
         <div class="container">
-            <button class="btn btn-success">Add new device</button>
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#add_device">Add device</button>
+
+            <!-- Modal -->
+            <div id="add_device" class="modal fade in active" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title">Add device</h3>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="post" action="~/Admin/AddDevice" name="addDevice">
+                                <input placeholder="Name" name="deviceName" required /> <br /> <br />
+                                <input placeholder="Memory value" name="memoryValue" required /> <br /><br />
+                                <input placeholder="User name" name="userName"/>
+
+                                <!-- instead of typing name we should implement dropdown list with users -->
+
+                                <br /><br />
+                                <input type="submit" class="btn btn-success" value="Submit" />
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
             <button class="btn btn-success">Create new group</button>
             <button class="btn btn-success">Upload a timetable</button>
             <button class="btn btn-warning">Export the timetable</button>
             <br> <br>
-            <table class="table">
-                <tr>
-                    <th>Device name</th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                </tr>
-                <tr class="device_group_row">
-                    <td>Any name</td>
-                    <td><button class="btn btn-danger">Remove group</button></td>
-                    <td>
-                        <button type="button" class="btn btn-success btn-md" data-toggle="modal" data-target="#access_group">Get access</button>
-                    </td>
-                    <td><button class="btn btn-info">Check statistics</button> <br> <br></td>
-                </tr>
-                <tr class="device_row">
-                    <td>Any name</td>
-                    <td><button class="btn btn-danger">Remove device</button></td>
-                    <td>
-                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#access_device">Get access</button>
-                    </td>
-                    <td><button class="btn btn-info">Check statistics</button> <br> <br></td>
-                </tr>
-            </table>
+                 <table class="table">
+                     <tr>
+                         <th>Device name</th>
+                         <th>Memory</th>
+                         <th>User</th>
+                         <th></th>
+                     </tr>
+                     @{
+                         foreach (Device device in Model.devices.Get())
+                         {
+                             <tr>
+                                 <td>@device.deviceName</td>
+                                 <td>@device.memory</td>
+                                 <td>@device.user.Name</td>
+                                 <td>
+                                     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete_user">Delete device</button>
+                                 </td>
+                             </tr>
+                         }
+                     }
+                 </table>
         </div>
         <br>
     </div>
@@ -149,7 +204,7 @@
                         <li><a href="#">1st group</a></li>
                         <li><a href="#">2nd group</a></li>
                     </ul> <br> <br>
-                    <input type="button" class="btn btn-warning" value="Choose Video"></input> <br> <br>
+                    <input type="button" class="btn btn-warning" value="Choose Video"> <br> <br>
                     <input type="button" class="btn btn-warning" value="Edit the timetable"></input>
                 </div>
             </div>

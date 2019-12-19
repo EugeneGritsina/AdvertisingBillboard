@@ -27,14 +27,13 @@ namespace AdvertisingBillboard.Web.Controllers
         [HttpPost]
         public IActionResult EnterAsUser(string userName)
         {
-            if (!(userName == null))
-                foreach (var user in _usersRepository.Get())
-                {
-                    if (userName.ToLower().Equals(user.Name.ToLower()))
-                    {
-                        return View("~/Views/Users/Index.cshtml");
-                    }
+            foreach (var user in _usersRepository.Get())
+            {
+                if (userName.ToLower().Equals(user.Name.ToLower())) {
+                    ViewBag.userName = userName;
+                    return View("~/Views/Users/Index.cshtml");
                 }
+            }
             return View("~/Views/Shared/ErrorWrongName.cshtml");
         }
     }

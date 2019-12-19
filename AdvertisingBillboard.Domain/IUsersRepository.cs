@@ -6,7 +6,6 @@ namespace AdvertisingBillboard.Domain
     {
         User[] Get();
         User Get(Guid id);
-
         User Get(string name);
         void Create(User user);
         void Delete(Guid id);

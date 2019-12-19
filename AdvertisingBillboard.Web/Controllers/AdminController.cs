@@ -7,47 +7,64 @@ namespace AdvertisingBillboard.Web.Controllers
 {
     public class AdminController : Controller
     {
-
-        private readonly IUsersRepository _usersRepository;
-        public AdminController(IUsersRepository usersRepository)
+        private readonly ManageDevicesViewModel manageDevicesViewModel = new ManageDevicesViewModel();
+        //private readonly IUsersRepository _usersRepository;
+        //private readonly IDevicesRepository _devicesRepository;
+        StatusBar statusBar = new StatusBar();
+        public AdminController(IUsersRepository usersRepository, IDevicesRepository devicesRepository)
         {
-            _usersRepository = usersRepository;
+            manageDevicesViewModel.devices = devicesRepository;
+            manageDevicesViewModel.users = usersRepository;
         }
 
         [HttpPost]
-        public ActionResult AddUser(string name)
+        public RedirectResult AddUser(string name)
         {
-            _usersRepository.Create(new User
+            manageDevicesViewModel.users.Create(new User
             {
                 Id = Guid.NewGuid(),
                 Name = name
-            }); ;
-            return View("Index");
+            });
+
+            return Redirect("/Admin/Index");
+        }
+
+        public RedirectResult DeleteUser()
+        {
+            Guid id = ViewBag.userToDelete;
+            manageDevicesViewModel.users.Delete(id);
+            return Redirect("/Admin/Index");
+        }
+
+        public RedirectResult AddDevice(string deviceName, double memoryValue, string userName)
+        {
+            User tempUser = manageDevicesViewModel.users.Get(userName);
+            if (!(tempUser == null))
+            {
+                manageDevicesViewModel.devices.Create(new Device
+                {
+                    deviceName = deviceName,
+                    memory = memoryValue,
+                    user = tempUser
+                });
+                return Redirect("/Admin/Index");
+            }
+            return Redirect("/Admin/NotExistingName");
+        }
+
+        public ActionResult NotExistingName()
+        {
+            return View("~/Views/Admin/NotExistingName.cshtml");
         }
 
         public ActionResult Index()
         {
-            _usersRepository.Create(new User
-            {
-                Id = Guid.NewGuid(),
-                Name = "A1"
-            });
-
-            _usersRepository.Create(new User
-            {
-                Id = Guid.NewGuid(),
-                Name = "A2"
-            });
-
-            var users = _usersRepository.Get();
-
-            var statusBar = new StatusBar
-            {
-                NumberOfDevices = 1,
-                NumberOfUsers = users.Length,
-                NumberOfVideos = 3
-            };
-            return View(statusBar);
+            var users = manageDevicesViewModel.users.Get();
+            var devices = manageDevicesViewModel.devices.Get();
+            ViewBag.NumberOfDevices = devices.Length;
+            ViewBag.NumberOfUsers = users.Length;
+            ViewBag.NumberOfVideos = 0;
+            return View(manageDevicesViewModel);
         }
 
     }
