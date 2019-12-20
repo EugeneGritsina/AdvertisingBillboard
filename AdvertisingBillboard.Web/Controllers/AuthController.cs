@@ -24,14 +24,13 @@ namespace AdvertisingBillboard.Web.Controllers
         }
 
 
-        [HttpPost]
-        public IActionResult EnterAsUser(string userName)
+        public ActionResult EnterAsUser(string userName)
         {
             foreach (var user in _usersRepository.Get())
             {
                 if (userName.ToLower().Equals(user.Name.ToLower())) {
                     ViewBag.userName = userName;
-                    return View("~/Views/Users/Index.cshtml");
+                    return RedirectToAction("Index", "Users", new { name = userName });
                 }
             }
             return View("~/Views/Shared/ErrorWrongName.cshtml");

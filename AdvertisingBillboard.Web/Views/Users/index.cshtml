@@ -1,4 +1,4 @@
-﻿@model AdvertisingBillboard.Domain.User[]
+﻿@model AdvertisingBillboard.Domain.User
 
 @{
     Layout = "~/Views/Shared/DefaultLayout.cshtml";
@@ -8,7 +8,7 @@
         <div class="row">
             <input type="button" class="btn btn-primary col-2" value="Export timetable" />
             <span class="col-6"></span>
-            <h5 class="col-4">Welcome, @ViewBag.userName</h5>
+            <h5 class="col-4">Welcome, @Model.Name</h5>
         </div> <br />
 
         <ul class="nav nav-tabs">
@@ -35,13 +35,19 @@
                             <th>Device name</th>
                             <th></th>
                         </tr>
-                        <tr>
-                            <td>Any name</td>
-                            <td>
-                                <button type="button" class="btn btn-success btn-md" data-toggle="modal" data-target="#user_access_device">Get access</button>
-                            </td>
-                        </tr>
-                    </table>
+                        @{ foreach (var device in Model.devices)
+                           {
+                                <tr>
+                                    <td>
+                                        @device.deviceName
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-success btn-md" data-toggle="modal" data-target="#user_access_device">Get access</button>
+                                    </td>
+                                </tr>
+                           }
+                        }
+                            </table>
                     <table class="table">
                         <tr>
                             <th>Device Group name</th>
@@ -66,12 +72,20 @@
                         <th>Date</th>
                     </tr>
                     <tr>
-                        <td>Name</td>
+                        @{ foreach (var device in Model.devices)
+                            {
+                    <tr>
+                        <td>
+                            @device.deviceName
+                        </td>
                         <td>1</td>
                         <td>2</td>
                         <td>3</td>
                     </tr>
-                </table>
+                        }
+                        }
+                        </tr>
+                    </table>
             </div>
             <div id="videos_table" class="tab-pane fade container">
                 <table class="table">

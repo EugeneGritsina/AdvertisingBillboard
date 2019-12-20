@@ -47,6 +47,7 @@ namespace AdvertisingBillboard.Data.Memory
                 if (user.Id == id)
                 {
                     _users.Remove(user);
+                    return;
                 }  
             }
         }

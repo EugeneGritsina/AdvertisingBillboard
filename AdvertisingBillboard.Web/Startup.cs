@@ -27,6 +27,7 @@ namespace AdvertisingBillboard.Web
         {
             services.AddSingleton<IUsersRepository, UsersRepository>();
             services.AddSingleton<IDevicesRepository, DevicesRepository>();
+            services.AddSingleton<IVideosRepository, VideosRepository>();
             services.AddControllersWithViews();
         }
 

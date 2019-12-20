@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using AdvertisingBillboard.Domain;
 using AdvertisingBillboard.Web.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +12,11 @@ namespace AdvertisingBillboard.Web.Controllers
         //private readonly IUsersRepository _usersRepository;
         //private readonly IDevicesRepository _devicesRepository;
         StatusBar statusBar = new StatusBar();
-        public AdminController(IUsersRepository usersRepository, IDevicesRepository devicesRepository)
+        public AdminController(IUsersRepository usersRepository, IDevicesRepository devicesRepository, IVideosRepository videosRepository)
         {
             manageDevicesViewModel.devices = devicesRepository;
             manageDevicesViewModel.users = usersRepository;
+            manageDevicesViewModel.videos = videosRepository;
         }
 
         [HttpPost]
@@ -23,17 +25,18 @@ namespace AdvertisingBillboard.Web.Controllers
             manageDevicesViewModel.users.Create(new User
             {
                 Id = Guid.NewGuid(),
-                Name = name
+                Name = name,
+                devices = new List<Device>()
             });
 
             return Redirect("/Admin/Index");
         }
 
-        public RedirectResult DeleteUser()
+        [HttpPost, ActionName("delete")]
+        public RedirectResult Delete(Guid id)
         {
-            Guid id = ViewBag.userToDelete;
             manageDevicesViewModel.users.Delete(id);
-            return Redirect("/Admin/Index");
+            return Redirect("~/Admin/Index");
         }
 
         public RedirectResult AddDevice(string deviceName, double memoryValue, string userName)
@@ -41,12 +44,9 @@ namespace AdvertisingBillboard.Web.Controllers
             User tempUser = manageDevicesViewModel.users.Get(userName);
             if (!(tempUser == null))
             {
-                manageDevicesViewModel.devices.Create(new Device
-                {
-                    deviceName = deviceName,
-                    memory = memoryValue,
-                    user = tempUser
-                });
+                Device tempDevice = new Device(){ deviceName = deviceName, memory = memoryValue, user = tempUser };
+                manageDevicesViewModel.devices.Create(tempDevice);
+                tempUser.devices.Add(tempDevice);
                 return Redirect("/Admin/Index");
             }
             return Redirect("/Admin/NotExistingName");
@@ -61,10 +61,23 @@ namespace AdvertisingBillboard.Web.Controllers
         {
             var users = manageDevicesViewModel.users.Get();
             var devices = manageDevicesViewModel.devices.Get();
+            var videos = manageDevicesViewModel.videos.Get();
             ViewBag.NumberOfDevices = devices.Length;
             ViewBag.NumberOfUsers = users.Length;
-            ViewBag.NumberOfVideos = 0;
+            ViewBag.NumberOfVideos = videos.Length;
             return View(manageDevicesViewModel);
+        }
+
+        public ActionResult UploadVideo(string videoAddress, string videoName, string deviceName)
+        {
+            Video video = new Video()
+            {
+                name = videoName,
+                address = videoAddress,
+                device = manageDevicesViewModel.devices.Get(deviceName)
+            };
+            manageDevicesViewModel.videos.AddVideo(video);
+            return Redirect("/Admin/Index");
         }
 
     }

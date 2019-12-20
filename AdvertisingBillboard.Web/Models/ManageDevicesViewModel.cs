@@ -7,5 +7,6 @@ namespace AdvertisingBillboard.Web.Models
     {
         public IDevicesRepository devices { get; set; }
         public IUsersRepository users { get; set; }
+        public IVideosRepository videos { get; set; }
     }
 }

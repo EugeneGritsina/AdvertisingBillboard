@@ -36,63 +36,77 @@
                 <tr>
                     <th>ID</th>
                     <th>User's name</th>
+                    <th>Devices</th>
                     <th></th>
                 </tr>
                 <tr>
-                     @{
-                         foreach (User user in Model.users.Get())
-                         {
-                             <tr>
-                                 <td>@user.Id</td>
-                                 <td>@user.Name</td>
-                                 <td>
-                                     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete_user" onclick="@{ViewBag.userToDelete = user.Id;}">Delete user</button>
-                                 </td>
-                             </tr>
-                                         }
-                     }
-                </tr>
-            </table>
-        </div>
+                    @{
+                        foreach (User user in Model.users.Get())
+                        {
+                            <tr>
+                                <td>@user.Id</td>
+                                <td>@user.Name</td>
+                                <td>
+                                    <ul>
+                                        @foreach (Device device in user.devices)
+                                        {
+                                            <li>@device.deviceName</li>
+                                        }
+                                    </ul>
+                                </td>
+                                <td>
+                                    <form method="post" action="@Url.Action("Delete", "Admin", new {id = user.Id })">
+                                        <button type="submit" class="btn btn-danger" value="Submit">
+                                            Delete user
+                                        </button>
+                                    </form>
+                                    <!--<input type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete_user" value="Delete user">-->
+                                </td>
+                            </tr>
+                        }
+                    }
+                    </tr>
+                </table>
+            </div>
 
-        <!-- Modal -->
-        <div id="add_user" class="modal fade in active" role="dialog">
-            <div class="modal-dialog">
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3 class="modal-title">Add user</h3>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <!-- Modal -->
+            <div id="add_user" class="modal fade in active" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title">Add user</h3>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="post" action="~/Admin/AddUser">
+                                <input placeholder="Name" name="name" required /> <br /> <br />
+                                <input type="submit" class="btn btn-success" value="Submit" />
+                            </form>
+                        </div>
                     </div>
-                    <div class="modal-body">
-                        <form method="post" action="~/Admin/AddUser">
-                            <input placeholder="Name" name="name" required/> <br /> <br />
-                            <input type="submit" class="btn btn-success" value="Submit" />
-                        </form>
+                </div>
+            </div>
+
+            <!-- Modal -->
+            <div id="delete_user" class="modal fade in active" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title">Delete user</h3>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Are you sure you want to delete user?</p>
+                            <form method="post" action="~/Admin/DeleteUser">
+                                <input type="submit" class="btn btn-danger" value="Submit" />
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- Modal -->
-        <div id="delete_user" class="modal fade in active" role="dialog">
-            <div class="modal-dialog">
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3 class="modal-title">Delete user</h3>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Are you sure you want to delete user?</p>
-                        <form method="post" action="~/Admin/DeleteUser">
-                            <input type="submit" class="btn btn-danger" value="Submit" />
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- MANAGE DEVICES PART -->
 
@@ -115,9 +129,7 @@
                                 <input placeholder="Name" name="deviceName" required /> <br /> <br />
                                 <input placeholder="Memory value" name="memoryValue" required /> <br /><br />
                                 <input placeholder="User name" name="userName"/>
-
-                                <!-- instead of typing name we should implement dropdown list with users -->
-
+                                <!-- here we should implement a dropdown list instead of typing name of the user -->
                                 <br /><br />
                                 <input type="submit" class="btn btn-success" value="Submit" />
                             </form>
@@ -160,7 +172,30 @@
     <div id="videos" class="tab-pane fade">
         <br>
         <div class="container">
-            <button class="btn btn-success">Upload video</button> <br> <br>
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#uploadVideo">Upload video</button> <br />
+
+            <!-- Modal -->
+            <div id="uploadVideo" class="modal fade in active" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title">Upload Video</h3>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="post" action="~/Admin/UploadVideo" name="uploadVideo">
+                                <input class="text" type="text" name="videoName" required /> <br><br>
+                                <input class="text" type="text" name="deviceName" required /> <br><br>
+                                <input class="btn btn-default" type="file" name="videoAddress" required /><br><br>
+                                <input class="btn btn-success" type="submit" value="Submit" />
+                                <br /><br />
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <table class="table">
                 <tr>
                     <th>Video</th>
@@ -170,11 +205,16 @@
                     <th></th>
                 </tr>
                 <tr>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>3</td>
-                    <td>4</td>
-                    <td><button class="btn btn-danger btn-xs">Delete video</button></td>
+                    @foreach (var currentVideo in Model.videos.Get())
+                    {
+                        <td>
+                            <a href="~/video/@currentVideo.address">@currentVideo.name</a>
+                        </td>
+                        <td>2</td>
+                        <td>3</td>
+                        <td>4</td>
+                        <td><button class="btn btn-danger btn-xs">Delete video</button></td>
+                    }
                 </tr>
             </table>
         </div>
