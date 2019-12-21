@@ -36,6 +36,7 @@ namespace AdvertisingBillboard.Data.Memory
                 if (_device.Equals(device))
                 {
                     _devices.Remove(device);
+                    return;
                 }
             }
         }

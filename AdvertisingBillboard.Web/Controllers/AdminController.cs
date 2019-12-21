@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using AdvertisingBillboard.Domain;
+using AdvertisingBillboard.Domain.Services;
 using AdvertisingBillboard.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,14 +10,16 @@ namespace AdvertisingBillboard.Web.Controllers
     public class AdminController : Controller
     {
         private readonly ManageDevicesViewModel manageDevicesViewModel = new ManageDevicesViewModel();
+        private readonly UserService userService = new UserService();
         //private readonly IUsersRepository _usersRepository;
         //private readonly IDevicesRepository _devicesRepository;
         StatusBar statusBar = new StatusBar();
-        public AdminController(IUsersRepository usersRepository, IDevicesRepository devicesRepository, IVideosRepository videosRepository)
+        public AdminController(IUsersRepository _usersRepository, IDevicesRepository _devicesRepository, IVideosRepository _videosRepository, UserService _userService)
         {
-            manageDevicesViewModel.devices = devicesRepository;
-            manageDevicesViewModel.users = usersRepository;
-            manageDevicesViewModel.videos = videosRepository;
+            manageDevicesViewModel.devices = _devicesRepository;
+            manageDevicesViewModel.users = _usersRepository;
+            manageDevicesViewModel.videos = _videosRepository;
+            userService = _userService;
         }
 
         [HttpPost]
@@ -35,6 +38,12 @@ namespace AdvertisingBillboard.Web.Controllers
         [HttpPost, ActionName("delete")]
         public RedirectResult Delete(Guid id)
         {
+            User userToDelete = manageDevicesViewModel.users.Get(id);
+            int amountOfDevicesUserHas = userService.GetDevices(userToDelete).Length;
+            Device[] userToDeleteDevices = userService.GetDevices(userToDelete);
+
+            userService.DeleteDevices(userToDeleteDevices, manageDevicesViewModel.devices, amountOfDevicesUserHas);
+
             manageDevicesViewModel.users.Delete(id);
             return Redirect("~/Admin/Index");
         }

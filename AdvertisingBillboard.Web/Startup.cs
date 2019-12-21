@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AdvertisingBillboard.Data.Memory;
 using AdvertisingBillboard.Domain;
+using AdvertisingBillboard.Domain.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -28,6 +29,7 @@ namespace AdvertisingBillboard.Web
             services.AddSingleton<IUsersRepository, UsersRepository>();
             services.AddSingleton<IDevicesRepository, DevicesRepository>();
             services.AddSingleton<IVideosRepository, VideosRepository>();
+            services.AddTransient<UserService>();
             services.AddControllersWithViews();
         }
 
