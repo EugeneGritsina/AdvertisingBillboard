@@ -11,15 +11,17 @@ namespace AdvertisingBillboard.Web.Controllers
     {
         private readonly ManageDevicesViewModel manageDevicesViewModel = new ManageDevicesViewModel();
         private readonly UserService userService = new UserService();
+        private readonly VideoService videoService = new VideoService();
         //private readonly IUsersRepository _usersRepository;
         //private readonly IDevicesRepository _devicesRepository;
         StatusBar statusBar = new StatusBar();
-        public AdminController(IUsersRepository _usersRepository, IDevicesRepository _devicesRepository, IVideosRepository _videosRepository, UserService _userService)
+        public AdminController(IUsersRepository _usersRepository, IDevicesRepository _devicesRepository, IVideosRepository _videosRepository, UserService _userService, VideoService _videoService)
         {
             manageDevicesViewModel.devices = _devicesRepository;
             manageDevicesViewModel.users = _usersRepository;
             manageDevicesViewModel.videos = _videosRepository;
             userService = _userService;
+            videoService = _videoService;
         }
 
         [HttpPost]
@@ -36,7 +38,7 @@ namespace AdvertisingBillboard.Web.Controllers
         }
 
         [HttpPost, ActionName("delete")]
-        public RedirectResult Delete(Guid id)
+        public RedirectResult Delete(Guid id)       //delete user and his videos
         {
             User userToDelete = manageDevicesViewModel.users.Get(id);
             int amountOfDevicesUserHas = userService.GetDevices(userToDelete).Length;
@@ -48,7 +50,15 @@ namespace AdvertisingBillboard.Web.Controllers
             return Redirect("~/Admin/Index");
         }
 
-        public RedirectResult AddDevice(string deviceName, double memoryValue, string userName)
+        [HttpPost]
+        public RedirectResult DeleteVideo(string name)
+        {
+            Video video = manageDevicesViewModel.videos.Get(name);
+            videoService.DeleteVideo(video,manageDevicesViewModel.videos);
+            return Redirect("~/Admin/Index");
+        }
+
+            public RedirectResult AddDevice(string deviceName, double memoryValue, string userName)
         {
             User tempUser = manageDevicesViewModel.users.Get(userName);
             if (!(tempUser == null))

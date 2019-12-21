@@ -3,7 +3,9 @@
 @{
     Layout = "~/Views/Shared/DefaultLayout.cshtml";
 }
-
+<br />
+        <a class="button btn-primary col-2" href="~/Auth/Index">Return to Authentification Page</a>
+<br />
 <div class="row">
     <span class="col-2"></span>
     <span class="col-3">Number of users: @ViewBag.NumberOfUsers</span>
@@ -55,12 +57,12 @@
                                     </ul>
                                 </td>
                                 <td>
+                                    <!--HOW TO DELETE VIDEO? -->
                                     <form method="post" action="@Url.Action("Delete", "Admin", new {id = user.Id })">
                                         <button type="submit" class="btn btn-danger" value="Submit">
                                             Delete user
                                         </button>
                                     </form>
-                                    <!--<input type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete_user" value="Delete user">-->
                                 </td>
                             </tr>
                         }
@@ -87,27 +89,7 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Modal -->
-            <div id="delete_user" class="modal fade in active" role="dialog">
-                <div class="modal-dialog">
-                    <!-- Modal content-->
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h3 class="modal-title">Delete user</h3>
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        </div>
-                        <div class="modal-body">
-                            <p>Are you sure you want to delete user?</p>
-                            <form method="post" action="~/Admin/DeleteUser">
-                                <input type="submit" class="btn btn-danger" value="Submit" />
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
-
     <!-- MANAGE DEVICES PART -->
 
     <div id="manageDevices" class="tab-pane fade">
@@ -172,7 +154,7 @@
     <div id="videos" class="tab-pane fade">
         <br>
         <div class="container">
-            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#uploadVideo">Upload video</button> <br />
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#uploadVideo">Upload video</button> <br /> <br />
 
             <!-- Modal -->
             <div id="uploadVideo" class="modal fade in active" role="dialog">
@@ -185,8 +167,8 @@
                         </div>
                         <div class="modal-body">
                             <form method="post" action="~/Admin/UploadVideo" name="uploadVideo">
-                                <input class="text" type="text" name="videoName" required /> <br><br>
-                                <input class="text" type="text" name="deviceName" required /> <br><br>
+                                <input class="text" type="text" name="videoName" placeholder="Name of the video" required /> <br><br>
+                                <input class="text" type="text" name="deviceName" placeholder="Name of the device" /> <br><br>
                                 <input class="btn btn-default" type="file" name="videoAddress" required /><br><br>
                                 <input class="btn btn-success" type="submit" value="Submit" />
                                 <br /><br />
@@ -206,17 +188,23 @@
                 </tr>
                 @foreach (var currentVideo in Model.videos.Get())
                 {
-                <tr>
-                    <td>
-                        <a href="~/video/@currentVideo.address">@currentVideo.name</a>
-                    </td>
-                    <td>2</td>
-                    <td>3</td>
-                    <td>4</td>
-                    <td><button class="btn btn-danger btn-xs">Delete video</button></td>
-                </tr>
+                    <tr>
+                        <td>
+                            <a href="~/video/@currentVideo.address">@currentVideo.name</a>
+                        </td>
+                        <td>2</td>
+                        <td>3</td>
+                        <td>4</td>
+                        <td>
+                            <form method="post" action="@Url.Action("DeleteVideo", "Admin", new {name = currentVideo.name })">
+                                <button type="submit" class="btn btn-danger" value="Submit">
+                                    Delete video
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
                 }
-                </table>
+            </table>
         </div>
     </div>
 
@@ -250,7 +238,6 @@
 
     </div>
 </div>
-    </div>
 
 
 <!-- Modal -->

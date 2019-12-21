@@ -7,7 +7,6 @@ namespace AdvertisingBillboard.Domain.Services
 {
     public class UserService
     {
-        private Device[] _devices;
         public Device[] GetDevices(User user)
         {
             return user.devices.ToArray();

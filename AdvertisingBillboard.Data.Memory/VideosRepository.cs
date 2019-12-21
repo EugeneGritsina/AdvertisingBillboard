@@ -34,6 +34,7 @@ namespace AdvertisingBillboard.Data.Memory
                 if (videoFromRepository.Equals(video))
                 {
                     _videos.Remove(video);
+                    return;
                 }
             }
         }

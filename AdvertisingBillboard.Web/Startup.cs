@@ -30,6 +30,7 @@ namespace AdvertisingBillboard.Web
             services.AddSingleton<IDevicesRepository, DevicesRepository>();
             services.AddSingleton<IVideosRepository, VideosRepository>();
             services.AddTransient<UserService>();
+            services.AddTransient<VideoService>();
             services.AddControllersWithViews();
         }
 
