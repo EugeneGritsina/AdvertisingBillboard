@@ -2,10 +2,9 @@ namespace AdvertisingBillboard.Domain
 {
     public class Video
     {
-        public string name { get; set; }
-        public Device device { get; set; }
-        //public DeviceGroup deviceGroup {get; set;}
-        public string address { get; set; }
+        public string Name { get; set; }
+        public Device Device { get; set; }
+        public string Address { get; set; }
         
     }
 }

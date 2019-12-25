@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using AdvertisingBillboard.Domain;
-using AdvertisingBillboard.Domain.Services;
 using AdvertisingBillboard.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,93 +8,121 @@ namespace AdvertisingBillboard.Web.Controllers
 {
     public class AdminController : Controller
     {
-        private readonly ManageDevicesViewModel manageDevicesViewModel = new ManageDevicesViewModel();
-        private readonly UserService userService = new UserService();
-        private readonly VideoService videoService = new VideoService();
-        //private readonly IUsersRepository _usersRepository;
-        //private readonly IDevicesRepository _devicesRepository;
-        StatusBar statusBar = new StatusBar();
-        public AdminController(IUsersRepository _usersRepository, IDevicesRepository _devicesRepository, IVideosRepository _videosRepository, UserService _userService, VideoService _videoService)
+        private readonly IUsersRepository _usersRepository;
+        private readonly IDevicesRepository _devicesRepository;
+        private readonly IVideosRepository _videosRepository;
+
+        public AdminController(
+            IUsersRepository usersRepository,
+            IDevicesRepository devicesRepository,
+            IVideosRepository videosRepository)
         {
-            manageDevicesViewModel.devices = _devicesRepository;
-            manageDevicesViewModel.users = _usersRepository;
-            manageDevicesViewModel.videos = _videosRepository;
-            userService = _userService;
-            videoService = _videoService;
+            _usersRepository = usersRepository;
+            _devicesRepository = devicesRepository;
+            _videosRepository = videosRepository;
+        }
+        
+        [HttpGet]
+        public ActionResult Index()
+        {
+            var users = _usersRepository.Get();
+            var devices = _devicesRepository.Get();
+            var videos = _videosRepository.Get();
+            
+            var usersViewModels = new List<UserViewModel>();
+            foreach (var user in users)
+            {
+                usersViewModels.Add(new UserViewModel
+                {
+                    Id = user.Id,
+                    Name = user.Name,
+                    Devices = _devicesRepository.Get(user.Id)
+                });
+            }
+            
+            var vm = new AdministratorPageViewModel
+            {
+                Users = usersViewModels.ToArray(),
+                Devices = devices,
+                Videos = videos
+            };
+            
+            return View(vm);
         }
 
         [HttpPost]
         public RedirectResult AddUser(string name)
         {
-            manageDevicesViewModel.users.Create(new User
+            _usersRepository.Create(new User
             {
                 Id = Guid.NewGuid(),
-                Name = name,
-                devices = new List<Device>()
+                Name = name
             });
-
+            
             return Redirect("/Admin/Index");
         }
 
-        [HttpPost, ActionName("delete")]
-        public RedirectResult Delete(Guid id)       //delete user and his videos
+        
+        
+        [HttpPost] 
+        [ActionName("delete")]
+        public RedirectResult Delete(Guid id)//delete user and his videos
         {
-            User userToDelete = manageDevicesViewModel.users.Get(id);
-            int amountOfDevicesUserHas = userService.GetDevices(userToDelete).Length;
-            Device[] userToDeleteDevices = userService.GetDevices(userToDelete);
-
-            userService.DeleteDevices(userToDeleteDevices, manageDevicesViewModel.devices, amountOfDevicesUserHas);
-
-            manageDevicesViewModel.users.Delete(id);
+            _usersRepository.Delete(id);
+            _devicesRepository.Delete(id);
             return Redirect("~/Admin/Index");
         }
 
-        [HttpPost]
-        public RedirectResult DeleteVideo(string name)
+        // [HttpPost]
+        // public RedirectResult DeleteVideo(string name)
+        // {
+        //     var videoToDelete = _videosRepository.
+        //     var videoToDelete = _videosRepository.Delete()
+        //     _videoService.Delete();
+        //     Video video = manageDevicesViewModel.videos.Get(name);
+        //     videoService.Delete(video,manageDevicesViewModel.videos);
+        //     return Redirect("~/Admin/Index");
+        // }
+        
+        public IActionResult AddDevice(string deviceName, double memoryValue, string userName)
         {
-            Video video = manageDevicesViewModel.videos.Get(name);
-            videoService.DeleteVideo(video,manageDevicesViewModel.videos);
-            return Redirect("~/Admin/Index");
-        }
-
-            public RedirectResult AddDevice(string deviceName, double memoryValue, string userName)
-        {
-            User tempUser = manageDevicesViewModel.users.Get(userName);
-            if (!(tempUser == null))
+            var user = _usersRepository.Get(userName);
+            if (user == null)
             {
-                Device tempDevice = new Device(){ deviceName = deviceName, memory = memoryValue, user = tempUser };
-                manageDevicesViewModel.devices.Create(tempDevice);
-                tempUser.devices.Add(tempDevice);
-                return Redirect("/Admin/Index");
+                return Redirect("/Admin/NotExistingName");
             }
-            return Redirect("/Admin/NotExistingName");
+            
+            Device device = new Device
+            {
+                Name = deviceName,
+                Memory = memoryValue,
+                User = user
+            };
+            
+            _devicesRepository.Create(device);
+            return Redirect("~/Admin/Index");
         }
+        
+        
 
         public ActionResult NotExistingName()
         {
             return View("~/Views/Admin/NotExistingName.cshtml");
         }
-
-        public ActionResult Index()
-        {
-            var users = manageDevicesViewModel.users.Get();
-            var devices = manageDevicesViewModel.devices.Get();
-            var videos = manageDevicesViewModel.videos.Get();
-            ViewBag.NumberOfDevices = devices.Length;
-            ViewBag.NumberOfUsers = users.Length;
-            ViewBag.NumberOfVideos = videos.Length;
-            return View(manageDevicesViewModel);
-        }
+        
 
         public ActionResult UploadVideo(string videoAddress, string videoName, string deviceName)
         {
-            Video video = new Video()
+            var device = _devicesRepository.Get(deviceName);
+            Video video = new Video
             {
-                name = videoName,
-                address = videoAddress,
-                device = manageDevicesViewModel.devices.Get(deviceName)
+                Name = videoName,
+                Address = videoAddress,
+                Device = device
             };
-            manageDevicesViewModel.videos.AddVideo(video);
+            
+            
+            _videosRepository.Create(video);
             return Redirect("/Admin/Index");
         }
 

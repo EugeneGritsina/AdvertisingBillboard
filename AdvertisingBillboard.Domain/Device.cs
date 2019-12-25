@@ -2,10 +2,8 @@ namespace AdvertisingBillboard.Domain
 {
     public class Device
     {
-        public string deviceName { get; set; }
-        public double memory { get; set; }
-        public User user { get; set; }
-
-        //DeviceGroup group { get; set; }
+        public string Name { get; set; }
+        public double Memory { get; set; }
+        public User User { get; set; }
     }
 }

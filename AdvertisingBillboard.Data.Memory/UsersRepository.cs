@@ -5,9 +5,10 @@ using AdvertisingBillboard.Domain;
 
 namespace AdvertisingBillboard.Data.Memory
 {
-    public class UsersRepository : IUsersRepository
+    public class UsersRepository: IUsersRepository
     {
         private ICollection<User> _users = new List<User>();
+        
         public User[] Get()
         {
             return _users.ToArray();

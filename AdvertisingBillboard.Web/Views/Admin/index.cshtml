@@ -1,18 +1,23 @@
 ﻿@using AdvertisingBillboard.Domain
-@model AdvertisingBillboard.Web.Models.ManageDevicesViewModel
+@using AdvertisingBillboard.Web.Models
+@model AdvertisingBillboard.Web.Models.AdministratorPageViewModel
 @{
     Layout = "~/Views/Shared/DefaultLayout.cshtml";
 }
+
+
 <br />
-        <a class="button btn-primary col-2" href="~/Auth/Index">Return to Authentification Page</a>
+    <a class="button btn-primary col-2" href="@Url.Action("Index", "Auth")">Return to Authentification Page</a>
 <br />
+
 <div class="row">
     <span class="col-2"></span>
-    <span class="col-3">Number of users: @ViewBag.NumberOfUsers</span>
-    <span class="col-3">Number of devices: @ViewBag.NumberOfDevices</span>
-    <span class="col-2">Number of videos: @ViewBag.NumberOfVideos</span>
+    <span class="col-3">Number of users: @Model.Users.Length</span>
+    <span class="col-3">Number of devices: @Model.Devices.Length</span>
+    <span class="col-2">Number of videos: @Model.Videos.Length</span>
     <span class="col-2"></span>
 </div>
+
 <br>
 
 <ul class="nav nav-tabs">
@@ -33,7 +38,13 @@
     <div id="manageUsers" class="tab-pane fade ">
         <br>
         <div class="container">
-            <button type="button" class="btn btn-success btn-md" data-toggle="modal" data-target="#add_user">Add user</button> <br> <br>
+            <button type="button" class="btn btn-success btn-md" data-toggle="modal" data-target="#add_user">
+                Add user
+            </button> 
+            
+            <br> 
+            <br>
+            
             <table class="table">
                 <tr>
                     <th>ID</th>
@@ -43,16 +54,16 @@
                 </tr>
                 <tr>
                     @{
-                        foreach (User user in Model.users.Get())
+                        foreach (UserViewModel user in Model.Users)
                         {
                             <tr>
                                 <td>@user.Id</td>
                                 <td>@user.Name</td>
                                 <td>
                                     <ul>
-                                        @foreach (Device device in user.devices)
+                                        @foreach (Device device in user.Devices)
                                         {
-                                            <li>@device.deviceName</li>
+                                            <li>@device.Name</li>
                                         }
                                     </ul>
                                 </td>
@@ -82,7 +93,9 @@
                         </div>
                         <div class="modal-body">
                             <form method="post" action="~/Admin/AddUser">
-                                <input placeholder="Name" name="name" required /> <br /> <br />
+                                <input placeholder="Name" name="name" required /> 
+                                <br /> 
+                                <br />
                                 <input type="submit" class="btn btn-success" value="Submit" />
                             </form>
                         </div>
@@ -110,7 +123,12 @@
                             <form method="post" action="~/Admin/AddDevice" name="addDevice">
                                 <input placeholder="Name" name="deviceName" required /> <br /> <br />
                                 <input placeholder="Memory value" name="memoryValue" required /> <br /><br />
-                                <input placeholder="User name" name="userName"/>
+                                <select size="1" name="userName" required>
+                                    @foreach(UserViewModel user in Model.Users)
+                                    {
+                                        <option>@user.Name</option>
+                                    }
+                                </select>
                                 <!-- here we should implement a dropdown list instead of typing name of the user -->
                                 <br /><br />
                                 <input type="submit" class="btn btn-success" value="Submit" />
@@ -133,14 +151,18 @@
                          <th></th>
                      </tr>
                      @{
-                         foreach (Device device in Model.devices.Get())
+                         foreach (Device device in Model.Devices)
                          {
                              <tr>
-                                 <td>@device.deviceName</td>
-                                 <td>@device.memory</td>
-                                 <td>@device.user.Name</td>
+                                 <td>@device.Name</td>
+                                 <td>@device.Memory</td>
+                                 <td>@device.User.Name</td>
                                  <td>
-                                     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete_user">Delete device</button>
+                                    <form method="post" action="@Url.Action("Delete", "Device", new {name = device.Name })">
+                                        <button type="submit" class="btn btn-danger" value="Submit">
+                                            Delete device
+                                        </button>
+                                    </form>
                                  </td>
                              </tr>
                          }
@@ -168,7 +190,12 @@
                         <div class="modal-body">
                             <form method="post" action="~/Admin/UploadVideo" name="uploadVideo">
                                 <input class="text" type="text" name="videoName" placeholder="Name of the video" required /> <br><br>
-                                <input class="text" type="text" name="deviceName" placeholder="Name of the device" /> <br><br>
+                                <select size="1" name="deviceName" required>
+                                @foreach(Device device in Model.Devices)
+                                {
+                                    <option>@device.Name</option>
+                                }
+                                </select> <br><br>
                                 <input class="btn btn-default" type="file" name="videoAddress" required /><br><br>
                                 <input class="btn btn-success" type="submit" value="Submit" />
                                 <br /><br />
@@ -186,21 +213,21 @@
                     <th>Working time</th>
                     <th></th>
                 </tr>
-                @foreach (var currentVideo in Model.videos.Get())
+                @foreach (var currentVideo in Model.Videos)
                 {
                     <tr>
                         <td>
-                            <a href="~/video/@currentVideo.address">@currentVideo.name</a>
+                            <a href="~/video/@currentVideo.Address">@currentVideo.Name</a>
                         </td>
                         <td>2</td>
                         <td>3</td>
                         <td>4</td>
                         <td>
-                            <form method="post" action="@Url.Action("DeleteVideo", "Admin", new {name = currentVideo.name })">
-                                <button type="submit" class="btn btn-danger" value="Submit">
-                                    Delete video
-                                </button>
-                            </form>
+                            @* <form method="post" action="@Url.Action("DeleteVideo", "Admin", new {name = currentVideo.Name })"> *@
+                            @*     <button type="submit" class="btn btn-danger" value="Submit"> *@
+                            @*         Delete video *@
+                            @*     </button> *@
+                            @* </form> *@
                         </td>
                     </tr>
                 }

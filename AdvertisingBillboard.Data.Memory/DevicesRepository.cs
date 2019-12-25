@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using AdvertisingBillboard.Domain;
 
 namespace AdvertisingBillboard.Data.Memory
@@ -14,11 +13,24 @@ namespace AdvertisingBillboard.Data.Memory
         {
             return _devices.ToArray();
         }
+
+        public Device[] Get(Guid userId)
+        {
+            var devices = new List<Device>();
+            foreach (var device in _devices)
+            {
+                if (device.User.Id == userId)
+                    devices.Add(device);
+            }
+
+            return devices.ToArray();
+        }
+
         public Device Get(string deviceName)
         {
             foreach (Device device in _devices)
             {
-                if (device.deviceName == deviceName)
+                if (device.Name == deviceName)
                     return device;
             }
             return null;
@@ -29,18 +41,30 @@ namespace AdvertisingBillboard.Data.Memory
             _devices.Add(device);
         }
 
-        public void Delete(Device device)
+        public void Delete(Guid userId)
         {
-            foreach (var _device in _devices)
+            var devices = new List<Device>();
+            foreach (var device in _devices)
             {
-                if (_device.Equals(device))
+                if (device.User.Id != userId)
+                {
+                   devices.Add(device);
+                }
+            }
+
+            _devices = devices;
+        }
+
+        public void Delete(string name)
+        {
+            foreach (var device in _devices)
+            {
+                if (device.Name == name)
                 {
                     _devices.Remove(device);
                     return;
                 }
             }
         }
-
-
     }
 }

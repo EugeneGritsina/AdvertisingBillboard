@@ -8,26 +8,29 @@ namespace AdvertisingBillboard.Data.Memory
 {
     public class VideosRepository : IVideosRepository
     {
-        private ICollection<Video> _videos = new List<Video>();
+        private readonly ICollection<Video> _videos = new List<Video>();
+        
         public Video[] Get()
         {
             return _videos.ToArray();
         }
+        
         public Video Get(string name)
         {
             foreach (Video video in _videos)
             {
-                if (video.name == name)
+                if (video.Name == name)
                     return video;
             }
             return null;
         }
-        public void AddVideo(Video video)
+        
+        public void Create(Video video)
         {
             _videos.Add(video);
         }
 
-        public void DeleteVideo(Video video)
+        public void Delete(Video video)
         {
             foreach (var videoFromRepository in _videos)
             {

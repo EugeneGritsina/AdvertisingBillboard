@@ -6,6 +6,7 @@ namespace AdvertisingBillboard.Web.Controllers
     public class AuthController :Controller
     {
         private readonly IUsersRepository _usersRepository;
+        
         public AuthController(IUsersRepository usersRepository)
         {
             _usersRepository = usersRepository;
@@ -30,7 +31,7 @@ namespace AdvertisingBillboard.Web.Controllers
             {
                 if (userName.ToLower().Equals(user.Name.ToLower())) {
                     ViewBag.userName = userName;
-                    return RedirectToAction("Index", "Users", new { name = userName });
+                    return RedirectToAction("Get", "Users", new { name = userName });
                 }
             }
             return View("~/Views/Shared/ErrorWrongName.cshtml");

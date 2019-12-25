@@ -1,4 +1,5 @@
 using AdvertisingBillboard.Domain;
+using AdvertisingBillboard.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AdvertisingBillboard.Web.Controllers
@@ -6,22 +7,30 @@ namespace AdvertisingBillboard.Web.Controllers
     public class UsersController : Controller
     {
         private readonly IUsersRepository _usersRepository;
+        private readonly IDevicesRepository _devicesRepository;
 
-        public UsersController(IUsersRepository usersRepository)
+        public UsersController(
+            IUsersRepository usersRepository,
+            IDevicesRepository devicesRepository)
         {
             _usersRepository = usersRepository;
+            _devicesRepository = devicesRepository;
         }
 
-        public IActionResult Index(string name)
+        [HttpGet]
+        public IActionResult Get(string name)
         {
-            //userName не передается через список параметров, а также нет возможности подтянуть ее через viewBag в контроллере Users
-            var users = _usersRepository.Get();
-            foreach (User user in users)
+            var user = _usersRepository.Get(name);
+            var devices = _devicesRepository.Get(user.Id);
+
+            var vm = new UserViewModel
             {
-                if (name.Equals(user.Name))
-                    return View(user);
-            }
-            return View();
+                Id = user.Id,
+                Name = user.Name,
+                Devices = devices
+            };
+            
+            return View(vm);
         }
     }
 }
