@@ -56,7 +56,8 @@ namespace AdvertisingBillboard.Web.Controllers
             _usersRepository.Create(new User
             {
                 Id = Guid.NewGuid(),
-                Name = name
+                Name = name,
+                Devices = new List<Device>()
             });
             
             return Redirect("/Admin/Index");
@@ -84,26 +85,6 @@ namespace AdvertisingBillboard.Web.Controllers
         //     return Redirect("~/Admin/Index");
         // }
         
-        public IActionResult AddDevice(string deviceName, double memoryValue, string userName)
-        {
-            var user = _usersRepository.Get(userName);
-            if (user == null)
-            {
-                return Redirect("/Admin/NotExistingName");
-            }
-            
-            Device device = new Device
-            {
-                Name = deviceName,
-                Memory = memoryValue,
-                User = user
-            };
-            
-            _devicesRepository.Create(device);
-            return Redirect("~/Admin/Index");
-        }
-        
-        
 
         public ActionResult NotExistingName()
         {
@@ -120,8 +101,7 @@ namespace AdvertisingBillboard.Web.Controllers
                 Address = videoAddress,
                 Device = device
             };
-            
-            
+
             _videosRepository.Create(video);
             return Redirect("/Admin/Index");
         }

@@ -1,0 +1,12 @@
+﻿
+@{
+    ViewData["Title"] = "Same Name Device";
+    Layout = "~/Views/Shared/DefaultLayout.cshtml";
+}
+
+<br>
+<div class="container col-6">
+    <h5>You can't add a device with the same name.</h5>
+    <input type="button" value="Return to Admin Page" class="button btn-default col-12" onclick="location.href='@Url.Action("Index", "Admin")'" />
+</div>
+
