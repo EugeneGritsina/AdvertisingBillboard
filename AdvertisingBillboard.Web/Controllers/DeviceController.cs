@@ -15,7 +15,7 @@ namespace AdvertisingBillboard.Web.Controllers
         }
 
         [HttpPost]
-        public RedirectResult Delete(string name)//delete device
+        public RedirectResult Delete(string name)
         {
             _devicesRepository.Delete(name);
             return Redirect("~/Admin/Index");

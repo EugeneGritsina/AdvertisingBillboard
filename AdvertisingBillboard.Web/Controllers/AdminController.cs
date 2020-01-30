@@ -50,61 +50,9 @@ namespace AdvertisingBillboard.Web.Controllers
             return View(vm);
         }
 
-        [HttpPost]
-        public RedirectResult AddUser(string name)
-        {
-            _usersRepository.Create(new User
-            {
-                Id = Guid.NewGuid(),
-                Name = name,
-                Devices = new List<Device>()
-            });
-            
-            return Redirect("/Admin/Index");
-        }
-
-        
-        
-        [HttpPost] 
-        [ActionName("delete")]
-        public RedirectResult Delete(Guid id)//delete user and his videos
-        {
-            _usersRepository.Delete(id);
-            _devicesRepository.Delete(id);
-            return Redirect("~/Admin/Index");
-        }
-
-        // [HttpPost]
-        // public RedirectResult DeleteVideo(string name)
-        // {
-        //     var videoToDelete = _videosRepository.
-        //     var videoToDelete = _videosRepository.Delete()
-        //     _videoService.Delete();
-        //     Video video = manageDevicesViewModel.videos.Get(name);
-        //     videoService.Delete(video,manageDevicesViewModel.videos);
-        //     return Redirect("~/Admin/Index");
-        // }
-        
-
         public ActionResult NotExistingName()
         {
             return View("~/Views/Admin/NotExistingName.cshtml");
         }
-        
-
-        public ActionResult UploadVideo(string videoAddress, string videoName, string deviceName)
-        {
-            var device = _devicesRepository.Get(deviceName);
-            Video video = new Video
-            {
-                Name = videoName,
-                Address = videoAddress,
-                Device = device
-            };
-
-            _videosRepository.Create(video);
-            return Redirect("/Admin/Index");
-        }
-
     }
 }

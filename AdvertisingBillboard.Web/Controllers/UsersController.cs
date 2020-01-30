@@ -1,6 +1,8 @@
 using AdvertisingBillboard.Domain;
 using AdvertisingBillboard.Web.Models;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
 
 namespace AdvertisingBillboard.Web.Controllers
 {
@@ -31,6 +33,35 @@ namespace AdvertisingBillboard.Web.Controllers
             };
             
             return View(vm);
+        }
+
+        [HttpPost]
+        public ActionResult Add(string name)
+        {
+            foreach (User user in _usersRepository.Get())
+            {
+                if (user.Name == name)
+                {
+                    return View("~/Views/Admin/SameNameUser.cshtml");
+                }
+            }
+            _usersRepository.Create(new User
+            {
+                Id = Guid.NewGuid(),
+                Name = name,
+                Devices = new List<Device>()
+            });
+
+            return Redirect("/Admin/Index");
+        }
+
+        [HttpPost]
+        [ActionName("delete")]
+        public RedirectResult Delete(Guid id)//delete user and his videos
+        {
+            _usersRepository.Delete(id);
+            _devicesRepository.Delete(id);
+            return Redirect("~/Admin/Index");
         }
     }
 }
