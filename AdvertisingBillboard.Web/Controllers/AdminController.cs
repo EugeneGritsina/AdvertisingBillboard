@@ -21,14 +21,15 @@ namespace AdvertisingBillboard.Web.Controllers
             _devicesRepository = devicesRepository;
             _videosRepository = videosRepository;
         }
-        
+
         [HttpGet]
         public ActionResult Index()
         {
             var users = _usersRepository.Get();
             var devices = _devicesRepository.Get();
             var videos = _videosRepository.Get();
-            
+
+
             var usersViewModels = new List<UserViewModel>();
             foreach (var user in users)
             {
@@ -39,15 +40,32 @@ namespace AdvertisingBillboard.Web.Controllers
                     Devices = _devicesRepository.Get(user.Id)
                 });
             }
-            
+
             var vm = new AdministratorPageViewModel
             {
                 Users = usersViewModels.ToArray(),
                 Devices = devices,
                 Videos = videos
             };
-            
+
             return View(vm);
+        }
+
+        [HttpGet]
+        public PartialViewResult Users()
+        {
+            return PartialView();
+        }
+        [HttpGet]
+        public PartialViewResult Videos()
+        {
+            return PartialView();
+        }
+
+        [HttpGet]
+        public PartialViewResult Devices()
+        {
+            return PartialView();
         }
 
         public ActionResult NotExistingName()
